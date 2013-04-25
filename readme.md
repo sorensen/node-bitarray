@@ -60,15 +60,32 @@ BitArray.octet([1, 0, 0]) // [1, 0, 0, 0, 0, 0, 0, 0]
 ```
 
 
-### BitArray.offsets(array)
+### BitArray.toOffsets(array)
 
 Find the offset indexes of all set bits
 
 * `array` - bit array
 
 ```js
-BitArray.offsets([0, 0, 1, 0, 1]) // [2, 4]
-new BitArray(144).offsets()       // [0, 3]
+BitArray.toOffsets([0, 0, 1, 0, 1]) // [2, 4]
+new BitArray(144).toOffsets()       // [0, 3]
+```
+
+
+### BitArray.equals(bitarray, bitarray)
+
+Perform an equality check on two BitArray instances
+
+* `bitarray` - bit array to compare
+* `bitarray` - bit array to compare
+
+```js
+var a = new BitArray('0101')
+  , b = new BitArray('0101')
+  , c = new BitArray('10')
+
+BitArray.equals(a, b) // true
+BitArray.equals(b, c) // false
 ```
 
 
@@ -79,6 +96,8 @@ Create a new instance from a binary string
 * `string` - binary string
 
 ```js
+var bits = BitArray.fromBinary('1001101')
+bits.toJSON() // [1, 0, 1, 1, 0, 0, 1]
 ```
 
 
@@ -89,6 +108,8 @@ Create a new instance from a offset positions of set bits
 * `string` - binary string
 
 ```js
+var bits = BitArray.fromOffsets([0, 4, 2, 9])
+bits.toJSON() // [1, 0, 1, 0, 1, 0, 0, 0, 0, 1]
 ```
 
 
@@ -101,28 +122,22 @@ Create a new instance from a base 10 number
 **Aliases**: [`fromDecimal`]
 
 ```js
-```
-
-
-### BitArray.fromNumber(number)
-
-Create a new instance from a base 10 number
-
-* `number` - base 10 number
-
-```js
+var bits = BitArray.fromNumber(15)
+bits.toJSON() // [1, 1, 1, 1]
 ```
 
 
 ### BitArray.fromHexadecimal(string)
 
-Create a new instance from a hexadecimal string
+Create a new instance from a hexadecimal string, case insensitive.
 
 * `string` - hexadecimal string
 
 **Aliases**: [`fromHex`]
 
 ```js
+var bits = BitArray.fromHex('Fa')
+bits.toJSON() // [0, 1, 0, 1, 1, 1, 1, 1]
 ```
 
 
@@ -133,6 +148,8 @@ Create a new instance from a 32bit integer
 * `number` - 32bit integer
 
 ```js
+var bits = BitArray.from32Integer(144)
+bits.toJSON() // [1, 0, 0, 1, 0, 0, 0, 0]
 ```
 
 
@@ -145,6 +162,10 @@ Create a new instance from a node buffer instance
 **Aliases**: [`fromRedis`]
 
 ```js
+var buf = new Buffer([128, 144, 255])
+  , bits = BitArray.fromBuffer(buf)
+
+bits.toJSON() // [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1]
 ```
 
 
@@ -172,12 +193,23 @@ BitArray.and(
 
 ### BitArray.toNumber(bits)
 
+Convert an array of bits to a base 10 number
+
+**Alias**: [`toDecimal`]
+
 ```js
+BitArray.toNumber([1, 0, 1, 1, 0, 1]) // 45
 ```
 
-### BitArray.toHex(bits)
+
+### BitArray.toHexadecimal(bits)
+
+Convert an array of bits to a hex string. Results are lowercased.
+
+**Alias**: [`toHex`]
 
 ```js
+BitArray.toHex([1, 0, 1, 1, 0, 1]) // '2d'
 ```
 
 
@@ -332,7 +364,60 @@ new BitArray(128).toJSON() // [1,0,0,0,0,0,0,0]
 Convert the current bit array to a node Buffer
 
 ```js
-new BitArray([128, 255]).toBuffer() // <Buffer 80 ff>
+new BitArray(new Buffer([128, 255])).toBuffer() // <Buffer 80 ff>
+```
+
+
+### instance.toOffsets()
+
+Convert the current bit array to an offset array
+
+```js
+new BitArray(new Buffer([128, 255])).toOffsets() // [0, 8, 9, 10, 11, 12, 13, 14, 15]
+```
+
+
+### instance.copy()
+
+Create and return a copy of the current BitArray
+
+**Aliases**: [`clone`]
+
+```js
+var bits = new BitArray(255)
+  , bits2 = bits.clone()
+
+BitArray.equals(bits, bits2) // true
+bits === bits2               // false
+```
+
+
+### instance.reset()
+
+Reset the current bits, if a length was supplied to the constructor it will be used.
+
+**Aliases**: [`clear`]
+
+```js
+var bits = new BitArray(144, 16)
+bits.toString() // '000000000001001'
+
+```
+
+
+### instance.equals(bitarray)
+
+Determine if the instance is equal to another instance
+
+* `bitarray` - instance to compare
+
+```js
+var a = new BitArray(1)          // [1]
+  , b = new BitArray(2)          // [1, 0]
+  , c = new BitArray().set(0, 1) // [1]
+
+a.equals(b) // false
+a.equals(c) // true
 ```
 
 

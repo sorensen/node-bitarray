@@ -6,6 +6,15 @@
 
 var slice = Array.prototype.slice
 
+/*!
+ * Array proxy methods.
+ */
+
+var methods = ['concat', 'every', 'filter', 'forEach', 'indexOf', 
+, 'join', 'lastIndexOf', 'map', 'pop', 'push', 'reduce', 'reduceRight'
+, 'reverse', 'shift', 'slice', 'some', 'sort', 'splice', 'unshift'
+]
+
 /**
  * Utility: Find the longest array or string in argument list
  *
@@ -39,7 +48,8 @@ function BitArray(x, len, oct) {
   this.__defineGetter__('length', function() {
     return this.__bits.length
   })
-  len && this.fill(len - 1)
+  len && this.fill(len)
+  this.__len = len
 }
 
 /*!
@@ -134,12 +144,29 @@ BitArray.parse = function(x, oct) {
  * @return {Array} list of offsets
  */
 
-BitArray.offsets = function(bits) {
+BitArray.toOffsets = function(bits) {
   var offs = []
   for (var i = 0; i < bits.length; i++) {
     bits[i] === 1 && offs.push(i)
   }
   return offs
+}
+
+/**
+ * Perform an equality check on two bit arrays, they are equal if
+ * all bits are the same
+ *
+ * @param {BitArray} first
+ * @param {BitArray} second
+ * @return {Boolean} equal
+ */
+
+BitArray.equals = function(a, b) {
+  if (a.__bits.length !== b.__bits.length) return false
+  for (var i = 0; i < a.__bits.length; i++) {
+    if (a.__bits[i] !== b.__bits[i]) return false
+  }
+  return true
 }
 
 /*!
@@ -200,7 +227,8 @@ BitArray.fromNumber = function(num) {
  * @return {BitArray} new instance
  */
 
-BitArray.fromHex = function(hex) {
+BitArray.fromHex =
+BitArray.fromHexadecimal = function(hex) {
   hex = ('' + hex).toLowerCase()
   if (!~(hex).indexOf('0x')) hex = '0x' + hex
   return BitArray.fromDecimal(+hex)
@@ -215,13 +243,13 @@ BitArray.fromHex = function(hex) {
 
 BitArray.from32Integer = function(num) {
   var bits = []
-    , tmp = x
+    , tmp = num
   
   while (tmp > 0) {
     bits.push(tmp % 2)
     tmp = Math.floor(tmp / 2)
   }
-  oct && (bits = BitArray.octet(bits))
+  bits = BitArray.octet(bits)
   return new BitArray().set(bits.reverse())
 }
 
@@ -234,8 +262,9 @@ BitArray.from32Integer = function(num) {
 
 BitArray.fromRedis =
 BitArray.fromBuffer = function(buf) {
+  var bits = []
   for (var i = 0; i < buf.length; i++) {
-    bits = bits.concat(BitArray.from32Integer(bits[i]).toJSON())
+    bits = bits.concat(BitArray.from32Integer(buf[i]).toJSON())
   }
   return new BitArray().set(bits)
 }
@@ -286,7 +315,8 @@ BitArray.toNumber = function(bits) {
  * @return {String} hexadecimal conversion
  */
 
-BitArray.toHex = function(bits) {
+BitArray.toHex =
+BitArray.toHexadecimal = function(bits) {
   return BitArray.toNumber(bits).toString(16)
 }
 
@@ -472,8 +502,8 @@ BitArray.prototype.get = function(idx, val) {
  * @return {Array} list of offsets
  */
 
-BitArray.prototype.offsets = function() {
-  return BitArray.offsets(this.__bits)
+BitArray.prototype.toOffsets = function() {
+  return BitArray.toOffsets(this.__bits)
 }
 
 /**
@@ -538,6 +568,49 @@ BitArray.prototype.toHex = function() {
 BitArray.prototype.toBuffer = function() {
   return BitArray.toBuffer(this.__bits)
 }
+
+/**
+ * Copy the current bits into a new BitArray instance
+ *
+ * @return {BitArray} cloned instance
+ */
+
+BitArray.prototype.clone =
+BitArray.prototype.copy = function() {
+  return new BitArray().set(this.toBits())
+}
+
+/**
+ * Reset to factory defaults
+ */
+
+BitArray.prototype.clear =
+BitArray.prototype.reset = function() {
+  this.__bits = []
+  this.__len && this.fill(this.__len)
+  return this
+}
+
+/**
+ * Perform an equality check against another bit array
+ *
+ * @param {BitArray} compare
+ * @return {Boolean} equal
+ */
+
+BitArray.prototype.equals = function(b) {
+  return BitArray.equals(this, b)
+}
+
+/*!
+ * Proxy all Array methods to the current bits
+ */
+
+methods.forEach(function(method) {
+  BitArray.prototype[method] = function() {
+    return Array.prototype[method].apply(this.__bits, arguments)
+  }
+})
 
 /*!
  * Module exports.
