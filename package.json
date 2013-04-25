@@ -1,0 +1,22 @@
+{
+  "author": "Beau Sorensen <mail@beausorensen.com> (http://github.com/sorensen)"
+, "name": "node-bitarray"
+, "description": "Node buffer and bitarray / bytearray utility"
+, "version": "0.0.1"
+, "license": "MIT"
+, "repository": {
+    "type": "git"
+  , "url": "git://github.com/sorensen/node-bitarray.git"
+  }
+, "engines": {
+    "node": "0.x"
+  }
+, "main": "index.js"
+, "scripts": {
+    "test": "make test"
+  }
+, "dependencies": {}
+, "devDependencies": {
+    "mocha": "1.9.0"
+  }
+}
