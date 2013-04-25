@@ -72,9 +72,6 @@ describe('BitArray', function() {
     ase(bits.length, 24)
   })
 
-console.log(new BitArray(144).valueOf()) // '00000001'
-console.log(1 + new BitArray(255))       // '11111111'
-
   it('should work from offsets', function() {
     var offs = [1, 5, 10]
       , ba = BitArray.fromOffsets(offs)

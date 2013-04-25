@@ -72,6 +72,82 @@ new BitArray(144).offsets()       // [0, 3]
 ```
 
 
+### BitArray.fromBinary(string)
+
+Create a new instance from a binary string
+
+* `string` - binary string
+
+```js
+```
+
+
+### BitArray.fromOffsets(array)
+
+Create a new instance from a offset positions of set bits
+
+* `string` - binary string
+
+```js
+```
+
+
+### BitArray.fromNumber(number)
+
+Create a new instance from a base 10 number
+
+* `number` - base 10 number
+
+**Aliases**: [`fromDecimal`]
+
+```js
+```
+
+
+### BitArray.fromNumber(number)
+
+Create a new instance from a base 10 number
+
+* `number` - base 10 number
+
+```js
+```
+
+
+### BitArray.fromHexadecimal(string)
+
+Create a new instance from a hexadecimal string
+
+* `string` - hexadecimal string
+
+**Aliases**: [`fromHex`]
+
+```js
+```
+
+
+### BitArray.from32Integer(number)
+
+Create a new instance from a 32bit integer
+
+* `number` - 32bit integer
+
+```js
+```
+
+
+### BitArray.fromBuffer(buffer)
+
+Create a new instance from a node buffer instance
+
+* `buffer` - node buffer instance
+
+**Aliases**: [`fromRedis`]
+
+```js
+```
+
+
 ### BitArray.and(array1, [array2], [...])
 
 Perform a bitwise `AND` operation on any number of bit arrays
@@ -87,6 +163,21 @@ BitArray.and(
 , [ 0, 1, 0, 0, 0, 1, 0, 1 ]
 )
 //[ 0, 0, 0, 0, 0, 0, 0, 1 ]
+```
+
+### BitArray.toBuffer(bits)
+
+```js
+```
+
+### BitArray.toNumber(bits)
+
+```js
+```
+
+### BitArray.toHex(bits)
+
+```js
 ```
 
 
