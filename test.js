@@ -28,6 +28,13 @@ describe('BitArray', function() {
       ase(oct2.length, 16)
     })
 
+    it('#bitcount()', function() {
+      ase(BitArray.cardinality(144), 2)
+      ase(BitArray.count(128), 1)
+      ase(BitArray.bitcount(new Buffer([255, 128])), 9)
+      ase(BitArray.population([0,1,1,0,1,0]), 3)
+    })
+
     it('#parse()', function() {
       ade(BitArray.parse('100101'), [1,0,1,0,0,1])
       ase(new BitArray(new BitArray(128).toString()).toString(), '00000001')
@@ -61,11 +68,8 @@ describe('BitArray', function() {
       ase(bits.pop(), 0)
     })
 
-    it('#bitcount()', function() {
-      ase(BitArray.cardinality(144), 2)
-      ase(BitArray.count(128), 1)
-      ase(BitArray.bitcount(new Buffer([255, 128])), 9)
-      ase(BitArray.population([0,1,1,0,1,0]), 3)
+    it('#fromBinary()', function() {
+      ade(BitArray.fromBinary('1010').toJSON(), [0,1,0,1])
     })
 
     it('#fromOffsets()', function() {
@@ -93,20 +97,16 @@ describe('BitArray', function() {
       ade(bits.toJSON(), [0, 1, 0, 1, 1, 1, 1, 1])
     })
 
-    it('#fromBuffer()', function() {
-      var buf = new Buffer([128, 144, 255])
-      , bits = BitArray.fromBuffer(buf)
-      ade(bits.toJSON(), [1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,1,1,1,1,1,1,1])
-    })
-
     it('#from32Integer()', function() {
       var bits = BitArray.from32Integer(144)
       ade(bits.toJSON(), [1,0,0,1,0,0,0,0])
       bits.set()
     })
 
-    it('#fromBinary()', function() {
-      ade(BitArray.fromBinary('1010').toJSON(), [0,1,0,1])
+    it('#fromBuffer()', function() {
+      var buf = new Buffer([128, 144, 255])
+      , bits = BitArray.fromBuffer(buf)
+      ade(bits.toJSON(), [1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,1,1,1,1,1,1,1])
     })
 
     it('#toOffsets()', function() {
