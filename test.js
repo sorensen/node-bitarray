@@ -4,15 +4,52 @@ var assert = require('assert')
   , ase = assert.strictEqual
   , ade = assert.deepEqual
   , BitArray = require('./index')
+  , info = require('./package.json')
 
 describe('BitArray', function() {
 
   describe('Static methods', function() {
 
+    it('#version', function() {
+      ase(info.version, BitArray.VERSION)
+    })
+
     it('#factory()', function() {
       var a = [255, 128].map(BitArray.factory).map(String)
       ase(a[0], '11111111')
       ase(a[1], '00000001')
+    })
+
+    it('#octet()', function() {
+      var oct = BitArray.octet([])
+      ase(oct.length, 8)
+      oct.push(1)
+      var oct2 = BitArray.octet(oct)
+      ase(oct2.length, 16)
+    })
+
+    it('#parse()', function() {
+      ade(BitArray.parse('100101'), [1,0,1,0,0,1])
+      ase(new BitArray(new BitArray(128).toString()).toString(), '00000001')
+      ade(BitArray.parse(), [])
+      ade(BitArray.parse([1,0]), [1,0])
+      ade(BitArray.parse(144), [1,0,0,1,0,0,0,0])
+    })
+
+    it('#equals()', function() {
+      var a = new BitArray('00001001')
+        , b = new BitArray(144)
+        , c = new BitArray([ 1, 0, 0, 1, 0, 0, 0, 0 ])
+        , d = new BitArray([ 1, 1, 1, 1, 1, 1, 1, 1 ])
+        , e = new BitArray(255)
+
+      ase(BitArray.equals(a, b), true)
+      ase(BitArray.equals(a, c), true)
+      ase(BitArray.equals(b, c), true)
+      ase(BitArray.equals(a, d), false)
+      ase(BitArray.equals(b, d), false)
+      ase(BitArray.equals(c, e), false)
+      ase(BitArray.equals(d, e), true)
     })
 
     it('#push()', function() {
@@ -29,19 +66,6 @@ describe('BitArray', function() {
       ase(BitArray.count(128), 1)
       ase(BitArray.bitcount(new Buffer([255, 128])), 9)
       ase(BitArray.population([0,1,1,0,1,0]), 3)
-    })
-
-    it('#octet()', function() {
-      var oct = BitArray.octet([])
-      ase(oct.length, 8)
-      oct.push(1)
-      var oct2 = BitArray.octet(oct)
-      ase(oct2.length, 16)
-    })
-
-    it('#parse()', function() {
-      ade(BitArray.parse('100101'), [1,0,1,0,0,1])
-      ase(new BitArray(new BitArray(128).toString()).toString(), '00000001')
     })
 
     it('#fromOffsets()', function() {
@@ -79,6 +103,10 @@ describe('BitArray', function() {
       var bits = BitArray.from32Integer(144)
       ade(bits.toJSON(), [1,0,0,1,0,0,0,0])
       bits.set()
+    })
+
+    it('#fromBinary()', function() {
+      ade(BitArray.fromBinary('1010').toJSON(), [0,1,0,1])
     })
 
     it('#toOffsets()', function() {

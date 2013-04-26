@@ -20,6 +20,7 @@ var methods = ['concat', 'every', 'filter', 'forEach', 'indexOf',
  *
  * @param {...} arrays or strings to check
  * @return {Array} longest array
+ * @api private
  */
 
 function longest() {
@@ -51,6 +52,12 @@ function BitArray(x, len, oct) {
   len && this.fill(len)
   this.__len = len
 }
+
+/*!
+ * Current library version, should match `package.json`
+ */
+
+BitArray.VERSION = '0.0.1'
 
 /*!
  * Max length or size for a bit array (2^32 - 1)
@@ -85,6 +92,7 @@ BitArray.factory = function(x, len, oct) {
 BitArray.octet = function(arr) {
   var len = arr.length
     , fill = len + (8 - len % 8)
+  
   if (len !== 0 && len % 8 === 0) {
     return arr
   }
@@ -107,7 +115,7 @@ BitArray.parse = function(x, oct) {
   var bits = []
     , tmp = x
 
-  if (!x) {
+  if (typeof x === 'undefined') {
     return bits
   }
   // Check for binary string
