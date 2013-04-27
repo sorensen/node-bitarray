@@ -6,7 +6,7 @@ var assert = require('assert')
   , BitArray = require('./index')
   , info = require('./package.json')
 
-describe('BitArray', function() {
+describe('BitArray v' + info.version, function() {
 
   describe('Static methods', function() {
 
@@ -176,7 +176,7 @@ describe('BitArray', function() {
     it('#clone()', function() {
       var bits = new BitArray().set([1,0,1])
         , bit2 = bits.clone()
-        
+
       ade(bit2.toJSON(), bits.toJSON())
       ase(BitArray.equals(bits, bit2), true)
       ase(bits == bit2, false)

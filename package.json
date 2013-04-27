@@ -2,7 +2,7 @@
   "author": "Beau Sorensen <mail@beausorensen.com> (http://github.com/sorensen)"
 , "name": "node-bitarray"
 , "description": "Node buffer and bitarray / bytearray utility"
-, "version": "0.0.1"
+, "version": "0.0.2"
 , "license": "MIT"
 , "repository": {
     "type": "git"

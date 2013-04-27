@@ -57,7 +57,7 @@ function BitArray(x, len, oct) {
  * Current library version, should match `package.json`
  */
 
-BitArray.VERSION = '0.0.1'
+BitArray.VERSION = '0.0.2'
 
 /*!
  * Max length or size for a bit array (2^32 - 1)

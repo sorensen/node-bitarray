@@ -60,18 +60,6 @@ BitArray.octet([1, 0, 0]) // [1, 0, 0, 0, 0, 0, 0, 0]
 ```
 
 
-### BitArray.toOffsets(array)
-
-Find the offset indexes of all set bits
-
-* `array` - bit array
-
-```js
-BitArray.toOffsets([0, 0, 1, 0, 1]) // [2, 4]
-new BitArray(144).toOffsets()       // [0, 3]
-```
-
-
 ### BitArray.equals(bitarray, bitarray)
 
 Perform an equality check on two BitArray instances
@@ -186,10 +174,24 @@ BitArray.and(
 //[ 0, 0, 0, 0, 0, 0, 0, 1 ]
 ```
 
+
+### BitArray.toOffsets(array)
+
+Find the offset indexes of all set bits
+
+* `array` - bit array
+
+```js
+BitArray.toOffsets([0, 0, 1, 0, 1]) // [2, 4]
+new BitArray(144).toOffsets()       // [0, 3]
+```
+
+
 ### BitArray.toBuffer(bits)
 
 ```js
 ```
+
 
 ### BitArray.toNumber(bits)
 
@@ -271,7 +273,7 @@ Find the cardinality of a bit array, 32bit integer, or buffer of 32bit ints
 
 * `bits` - 32bit integer, buffer of 32bit integers, or bit array
 
-**Alias**: [`count`, `bitcount`, `population`]
+**Alias**: [`count`, `cardinality`, `population`]
 
 ```js
 BitArray.cardinality(144)              // 2
@@ -318,6 +320,8 @@ new BitArray().fill(5) // bits: [0, 0, 0, 0, 0, 0]
 ### instance.bitcount()
 
 Get the bitcount of the current bits
+
+**Alias**: [`count`, `cardinality`, `population`]
 
 ```js
 new BitArray(255).cardinality() // 8
