@@ -146,21 +146,6 @@ BitArray.parse = function(x, oct) {
 }
 
 /**
- * Find the offsets of all flipped bits
- *
- * @param {Array} bit array
- * @return {Array} list of offsets
- */
-
-BitArray.toOffsets = function(bits) {
-  var offs = []
-  for (var i = 0; i < bits.length; i++) {
-    bits[i] === 1 && offs.push(i)
-  }
-  return offs
-}
-
-/**
  * Perform an equality check on two bit arrays, they are equal if
  * all bits are the same
  *
@@ -275,6 +260,21 @@ BitArray.fromBuffer = function(buf) {
     bits = bits.concat(BitArray.from32Integer(buf[i]).toJSON())
   }
   return new BitArray().set(bits)
+}
+
+/**
+ * Find the offsets of all flipped bits
+ *
+ * @param {Array} bit array
+ * @return {Array} list of offsets
+ */
+
+BitArray.toOffsets = function(bits) {
+  var offs = []
+  for (var i = 0; i < bits.length; i++) {
+    bits[i] === 1 && offs.push(i)
+  }
+  return offs
 }
 
 /*!
@@ -476,6 +476,39 @@ BitArray.prototype.fill = function(idx) {
 }
 
 /**
+ * Copy the current bits into a new BitArray instance
+ *
+ * @return {BitArray} cloned instance
+ */
+
+BitArray.prototype.clone =
+BitArray.prototype.copy = function() {
+  return new BitArray().set(this.toBits())
+}
+
+/**
+ * Reset to factory defaults
+ */
+
+BitArray.prototype.clear =
+BitArray.prototype.reset = function() {
+  this.__bits = []
+  this.__len && this.fill(this.__len)
+  return this
+}
+
+/**
+ * Perform an equality check against another bit array
+ *
+ * @param {BitArray} compare
+ * @return {Boolean} equal
+ */
+
+BitArray.prototype.equals = function(b) {
+  return BitArray.equals(this, b)
+}
+
+/**
  * Set the bit for a given offset
  *
  * @param {Number} offset index
@@ -485,6 +518,7 @@ BitArray.prototype.fill = function(idx) {
 BitArray.prototype.set = function(idx, val) {
   if (Array.isArray(idx)) {
     this.__bits = idx
+    this.__len && this.fill(this.__len)
     return this
   }
   this.fill(idx)
@@ -505,6 +539,19 @@ BitArray.prototype.get = function(idx, val) {
 }
 
 /**
+ * Find the cardinality of the current bit array
+ *
+ * @return {Number} cardinality
+ */
+
+BitArray.prototype.count =
+BitArray.prototype.population =
+BitArray.prototype.bitcount =
+BitArray.prototype.cardinality = function() {
+  return BitArray.cardinality(this.__bits)
+}
+
+/**
  * Find the offsets of all flipped bits
  *
  * @return {Array} list of offsets
@@ -512,16 +559,6 @@ BitArray.prototype.get = function(idx, val) {
 
 BitArray.prototype.toOffsets = function() {
   return BitArray.toOffsets(this.__bits)
-}
-
-/**
- * Find the cardinality of the current bit array
- *
- * @return {Number} cardinality
- */
-
-BitArray.prototype.cardinality = function() {
-  return BitArray.cardinality(this.__bits)
 }
 
 /**
@@ -575,39 +612,6 @@ BitArray.prototype.toHex = function() {
 
 BitArray.prototype.toBuffer = function() {
   return BitArray.toBuffer(this.__bits)
-}
-
-/**
- * Copy the current bits into a new BitArray instance
- *
- * @return {BitArray} cloned instance
- */
-
-BitArray.prototype.clone =
-BitArray.prototype.copy = function() {
-  return new BitArray().set(this.toBits())
-}
-
-/**
- * Reset to factory defaults
- */
-
-BitArray.prototype.clear =
-BitArray.prototype.reset = function() {
-  this.__bits = []
-  this.__len && this.fill(this.__len)
-  return this
-}
-
-/**
- * Perform an equality check against another bit array
- *
- * @param {BitArray} compare
- * @return {Boolean} equal
- */
-
-BitArray.prototype.equals = function(b) {
-  return BitArray.equals(this, b)
 }
 
 /*!
