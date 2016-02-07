@@ -259,7 +259,9 @@ BitArray.fromBuffer = function(buf) {
   for (var i = 0; i < buf.length; i++) {
     bits += BitArray.from32Integer(buf[i]).__bits.join('')
   }
-  return new BitArray().set(bits.split('').map(i => parseInt(i)))
+  return new BitArray().set(bits.split('').map(function (i) {
+    return parseInt(i)
+  }))
 }
 
 /**
