@@ -10,10 +10,6 @@ describe('BitArray v' + info.version, function() {
 
   describe('Static methods', function() {
 
-    it('#version', function() {
-      ase(info.version, BitArray.VERSION)
-    })
-
     it('#factory()', function() {
       var a = [255, 128].map(BitArray.factory).map(String)
       ase(a[0], '11111111')
