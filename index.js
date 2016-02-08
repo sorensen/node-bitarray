@@ -255,11 +255,13 @@ BitArray.from32Integer = function(num) {
 
 BitArray.fromRedis =
 BitArray.fromBuffer = function(buf) {
-  var bits = []
+  var bits = ''
   for (var i = 0; i < buf.length; i++) {
-    bits = bits.concat(BitArray.from32Integer(buf[i]).toJSON())
+    bits += BitArray.from32Integer(buf[i]).__bits.join('')
   }
-  return new BitArray().set(bits)
+  return new BitArray().set(bits.split('').map(function (i) {
+    return parseInt(i)
+  }))
 }
 
 /**
